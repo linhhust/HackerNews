@@ -1,17 +1,24 @@
-import {FETCH_PENDING,FETCH_SUCCESS,FETCH_FAILURE, ADD_NEWS} from '../actions/types';
+import { FETCH_PENDING, FETCH_SUCCESS, FETCH_FAILURE, ADD_NEWS } from '../actions/types';
 
 const INITIAL = {
-  
-  data: []
+
+  data: [],
+  category: 'beststories',
 };
 
-export default newsReducer = (state = INITIAL, action)=>{
+export default newsReducer = (state = INITIAL, action) => {
+  // console.log('reducer')
   switch (action.type) {
     case ADD_NEWS: {
       //console.log(state);
-      let data = [...state.data, action.payload];
-      return {...state, data: data}
+      let data = [...state.data, action.data];
+      return { ...state, data: data }
     }
+    case 'CHANGE_CATEGORY':
+    return {...state, data: [], category: action.category}
+    case 'RESET_NEWS':
+      console.log('reducer')
+      return INITIAL;
     default:
       return state;
   }

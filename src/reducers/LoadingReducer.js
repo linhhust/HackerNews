@@ -1,7 +1,7 @@
 import {FETCH_PENDING,FETCH_SUCCESS,FETCH_FAILURE, ADD_NEWS} from '../actions/types';
 
 const INITIAL = {
-  isFetching: false
+  isFetching: true
 };
 
 export default loadingReducer = (state = INITIAL, action)=>{

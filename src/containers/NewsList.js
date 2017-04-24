@@ -1,47 +1,91 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-    View, Text, ListView, Platform,
-    TouchableOpacity, StyleSheet, ActivityIndicator
+  View, Text, ListView, Platform,
+  TouchableOpacity, StyleSheet, ActivityIndicator, ScrollView
 } from 'react-native';
-import {connect} from 'react-redux'
-import {Actions} from 'react-native-router-flux'
+import { connect } from 'react-redux'
+import Icon from 'react-native-vector-icons/Ionicons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { NavigationActions } from 'react-navigation'
 
-import {loadData} from '../actions'
-import {Item} from '../components/Item'
+import { loadData, resetNews } from '../actions'
+import Item from '../components/Item'
 
-class NewsList extends Component{
+// import { DrawerButton } from '../components/DrawerButton'
 
-  componentWillMount(){
+class NewsList extends Component {
 
-    this.props.loadData('beststories');
-    // console.log('will', this.props);
-    this.createDataSource(this.props);
-  }
+  static PAGE_SIZE = 30;
 
-  componentWillReceiveProps(nextProps){
-    // console.log('NewsList:componentWillReceiveProps', nextProps);
-    this.createDataSource(nextProps);
-  }
+  static navigationOptions = {
+    title: 'HN',
+    header: (navigation) => {
+      if (navigation.state.params != undefined)
+        color = navigation.state.params.color;
+      else color = 'yellow';
+      // console.log('color', navigation)
+      return ({
+        left:
+        < TouchableOpacity onPress={() => navigation.navigate('tabs')} style={{ paddingLeft: 10 }}>
+          <Icon name='md-menu' size={30} color='white' />
+        </TouchableOpacity >
+        ,
+        titleStyle: { paddingLeft: 100 },
+        style: { backgroundColor: color },
+        right: (< TouchableOpacity onPress={() => {
+          navigation.dispatch(resetNews(navigation.state.params.category, NewsList.PAGE_SIZE))
+        }} style={{ paddingRight: 10 }}>
 
-  createDataSource({data}){
-    let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.dataSource = ds.cloneWithRows( data);
-    // console.log('create dataSource', data.length);
-  }
+          <FontAwesome name='refresh' size={30} style={{ paddingRight: 5 }} color='white' />
 
-  shouldComponentUpdate(nextProps, prevState) {
-    if (nextProps.data.length % 10 == 0) {
-      return true;
+        </TouchableOpacity>),
+        tintColor: 'white'
+
+      });
     }
-    return false;
   }
 
-  render(){
-    // console.log('isFetching', this.props);
+  componentWillMount() {
+    this.index = 0;
+    this.props.navigation.setParams({ color: this.props.theme.color });
+    if (this.props.navigation.state.params == undefined){
+      this.props.navigation.setParams({ category: this.props.news.category});
+      // console.log('navigation', this.props.navigation);
+      // this.props.dispatch(NavigationActions.setParams({params:{category: this.props.news.category}, key: 'newsList'}));
+      this.props.dispatch(loadData(this.props.news.category, 0, NewsList.PAGE_SIZE));
+      
+    }else
+      this.props.dispatch(loadData(this.props.navigation.state.params.category, 0, 30));
+    //  this.props.navigation.dispatch(loadData(this.props.navigation.state.params.category, 0, NewsList.PAGE_SIZE));
+    
+    this.createDataSource(this.props.news);
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.createDataSource(nextProps.news);
+    // if (this.props.navigation.state.params != undefined) {
+    //   if (this.props.navigation.state.params.color !== this.props.theme.color)
+    //     this.props.navigation.setParams({ color: this.props.theme.color });
+    // } else
+    //   this.props.navigation.setParams({ color: this.props.theme.color });
+    // console.log('navigation', this.props.navigation);
+  }
+
+//   shouldComponentUpdate(nextProps, nextState){
+//     return this.props.news.done;
+// }
+
+  createDataSource({data} ) {
+    let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    this.dataSource = ds.cloneWithRows(data);
+  }
+
+  render() {
 
     return (
 
-      <View style={styles.container} >
+      <ScrollView style={styles.container} >
         {
           this.props.error ?
             <View style={styles.error}>
@@ -51,30 +95,45 @@ class NewsList extends Component{
         }
         {
           this.props.isFetching ?
-          <View>
-            <ActivityIndicator
-              animating={true}
-              style={styles.centering}
-              size="large"
-            />
-            <Text style={styles.loading}> Loading.... </Text>
-          </View>
+            <View style={{flex: 1}}>
+              <ActivityIndicator
+                animating={true}
+                style={styles.centering}
+                size="large"
+              />
+              <Text style={styles.loading}> Loading.... </Text>
+            </View>
             :
             null
         }
         {
-          (this.props.data.length > 0) ?
-          <ListView
+          (this.props.news.data.length > 0) ?
+            <ListView
 
-            enableEmptySections
-            dataSource = {this.dataSource}
-            renderRow = {(item) => {
-            return <Item item ={item}/>}}
-          />
+              enableEmptySections
+              dataSource={this.dataSource}
+              renderRow={(item) => {
+
+                if (item)
+                  return <Item item={item} />
+                else return null;
+              }}
+
+            />
+            : null
+
+        }
+        {(this.dataSource.getRowCount() == (this.index + 1) * NewsList.PAGE_SIZE) ?
+          <TouchableOpacity onPress={() => {
+            this.index++;
+            this.props.dispatch(loadData(this.props.navigation.state.params.category, this.index, NewsList.PAGE_SIZE));
+          }}
+            style={styles.buttonMore} >
+            <Text > LOAD MORE </Text>
+          </TouchableOpacity>
           : null
         }
-
-      </View>
+      </ScrollView>
 
     );
   }
@@ -84,11 +143,10 @@ class NewsList extends Component{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:Platform.OS === 'ios' || Platform.Version > 19 ? 64 : 54
   },
   error: {
     flex: 1,
-    alignItems:'center',
+    alignItems: 'center',
     justifyContent: 'center'
   },
   loading: {
@@ -100,15 +158,31 @@ const styles = StyleSheet.create({
   centering: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonMore: {
+    backgroundColor: '#E3E5E6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50
   }
 })
 
-const mapStateToProps = (state) =>{
-  // console.log('map', state)
+const mapStateToProps = (state) => {
   return {
-          data:state.newsReducer.data,
-          isFetching: state.loadingReducer.isFetching,
-          error: state.errorReducer.error
-        };
+    news: state.newsReducer,
+    isFetching: state.loadingReducer.isFetching,
+    error: state.errorReducer.error,
+    theme: state.themeReducer,
+    nav: state.navigationReducer,
+  };
 }
-export default connect(mapStateToProps, {loadData}) (NewsList);
+
+const mapDispatchToProps = (dispatch) => {
+
+  return {
+    loadNews: (category, index, number) => dispatch(loadData(category, index, number))
+  }
+}
+
+// export default connect(mapStateToProps, { loadData })(NewsList);
+export default connect(mapStateToProps)(NewsList);
