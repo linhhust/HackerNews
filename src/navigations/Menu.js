@@ -1,17 +1,11 @@
-import { StackNavigator } from 'react-navigation'
+import React from 'react'
+import { Text } from 'react-native'
 
-import MenuScreen from '../screens/Menu'
-
-export default Menu = StackNavigator({
-    setting: { screen: MenuScreen }
-},
-    {
-        navigationOptions: {
-            title: 'Menu',
-            drawer: {
-                label: 'Menu',
-
-            }
-        }
-
-    })
+export default class Menu extends React.Component {
+    static navigationOptions = {
+        drawerLabel: 'Menu',
+    };
+    render() {
+        return <Text> Content Menu </Text>
+    }
+}

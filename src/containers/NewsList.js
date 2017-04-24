@@ -32,13 +32,20 @@ class NewsList extends Component {
         ,
         titleStyle: { paddingLeft: 100 },
         style: { backgroundColor: color },
-        right: (< TouchableOpacity onPress={() => {
-          navigation.dispatch(resetNews(navigation.state.params.category, NewsList.PAGE_SIZE))
-        }} style={{ paddingRight: 10 }}>
+        right: (<View style={{flexDirection:'row'}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("DrawerOpen")}
+            style={{ paddingRight: 15 }}
+          >
+            <FontAwesome name='share-alt' size={30} color='white' />
+          </TouchableOpacity>< TouchableOpacity onPress={() => {
+            navigation.dispatch(resetNews(navigation.state.params.category, NewsList.PAGE_SIZE))
+          }} style={{ paddingRight: 10 }}>
 
-          <FontAwesome name='refresh' size={30} style={{ paddingRight: 5 }} color='white' />
+            <FontAwesome name='refresh' size={30} style={{ paddingRight: 5 }} color='white' />
 
-        </TouchableOpacity>),
+          </TouchableOpacity>
+        </View>),
         tintColor: 'white'
 
       });
@@ -48,16 +55,16 @@ class NewsList extends Component {
   componentWillMount() {
     this.index = 0;
     this.props.navigation.setParams({ color: this.props.theme.color });
-    if (this.props.navigation.state.params == undefined){
-      this.props.navigation.setParams({ category: this.props.news.category});
+    if (this.props.navigation.state.params == undefined) {
+      this.props.navigation.setParams({ category: this.props.news.category });
       // console.log('navigation', this.props.navigation);
       // this.props.dispatch(NavigationActions.setParams({params:{category: this.props.news.category}, key: 'newsList'}));
       this.props.dispatch(loadData(this.props.news.category, 0, NewsList.PAGE_SIZE));
-      
-    }else
+
+    } else
       this.props.dispatch(loadData(this.props.navigation.state.params.category, 0, 30));
     //  this.props.navigation.dispatch(loadData(this.props.navigation.state.params.category, 0, NewsList.PAGE_SIZE));
-    
+
     this.createDataSource(this.props.news);
 
   }
@@ -72,11 +79,11 @@ class NewsList extends Component {
     // console.log('navigation', this.props.navigation);
   }
 
-//   shouldComponentUpdate(nextProps, nextState){
-//     return this.props.news.done;
-// }
+  //   shouldComponentUpdate(nextProps, nextState){
+  //     return this.props.news.done;
+  // }
 
-  createDataSource({data} ) {
+  createDataSource({ data }) {
     let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.dataSource = ds.cloneWithRows(data);
   }
@@ -95,7 +102,7 @@ class NewsList extends Component {
         }
         {
           this.props.isFetching ?
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <ActivityIndicator
                 animating={true}
                 style={styles.centering}

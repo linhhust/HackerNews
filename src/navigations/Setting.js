@@ -1,15 +1,11 @@
-import { StackNavigator } from 'react-navigation'
+import React from 'react'
+import { Text } from 'react-native'
 
-import SettingScreen from '../screens/Setting'
-
-export default Setting = StackNavigator({
-    setting: { screen: SettingScreen }
-},
-    {
-        navigationOptions: {
-            header: {
-                visible: true
-            }
-        }
-
-    })
+export default class Setting extends React.Component {
+    static navigationOptions = {
+        drawerLabel: 'Setting',
+    };
+    render() {
+        return <Text> Content Setting </Text>
+    }
+}
