@@ -20,9 +20,13 @@ class NewsList extends Component {
   static navigationOptions = {
     title: 'HN',
     header: (navigation) => {
-      if (navigation.state.params != undefined){
+      console.log('theme', navigation.state.params);
+      if (navigation.state.params != undefined && navigation.state.params.theme != undefined){
+        
+        
         color = navigation.state.params.theme.color;
         size = navigation.state.params.theme.size;
+        
       }
       else {
         color = 'yellow';
@@ -54,7 +58,7 @@ class NewsList extends Component {
   componentWillMount() {
     console.log('will NewsList')
     this.index = 0;
-    this.props.navigation.setParams({ theme: this.props.theme });
+    this.props.navigation.setParams({  theme:  this.props.theme});
     if (this.props.navigation.state.params == undefined) {
       this.props.navigation.setParams({ category: this.props.news.category });
       // this.props.dispatch(NavigationActions.setParams({params:{category: this.props.news.category}, key: 'newsList'}));
