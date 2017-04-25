@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { LOAD_LIST, LOAD_NEWS, FETCH_PENDING, FETCH_SUCCESS, FETCH_FAILURE } from './actions/types';
-import { fetchFailure } from './actions/index'
+import { fetchFailure } from './actions'
 import API from './api'
 import { addNews } from './actions/NewsAction'
 
