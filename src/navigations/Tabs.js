@@ -6,7 +6,7 @@ import Menu from '../screens/Menu'
 export default Tabs = TabNavigator({
     menu: { screen: Menu },
     setting: { screen: Setting },
-}
+});
 // }, {
 //     tabBarOptions: {
 //             activeTintColor: 'blue',
