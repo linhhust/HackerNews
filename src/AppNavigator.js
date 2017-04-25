@@ -10,13 +10,14 @@ class AppNavigator extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
+                <Connector />
                 <Root
                     navigation={addNavigationHelpers({
                         dispatch: this.props.dispatch,
                         state: this.props.nav
                     })}
                 />
-                <Connector />
+                
             </View>
         );
     }

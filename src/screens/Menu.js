@@ -6,7 +6,8 @@ import { connect } from 'react-redux'
 class Menu extends React.Component {
 
     static navigationOptions = {
-        title: 'HN',
+        // title: 'HN',
+        tabBarLabel: 'Menu',
         header: (navigation) => {
             if (navigation.state.params != undefined)
                 color = navigation.state.params.color;
@@ -17,8 +18,11 @@ class Menu extends React.Component {
                 style: { backgroundColor: color },
                 tintColor: 'white'
             });
-        }
+        },
+        
     }
+
+    static theme = 'yellow' ;
 
     createDataSource(data) {
         let ds = new ListView.DataSource({
@@ -28,14 +32,19 @@ class Menu extends React.Component {
     }
 
     componentWillMount() {
-         this.props.navigation.setParams({color: this.props.color})
+        this.props.navigation.setParams({ color: this.props.color })
         let data = ['Ask', 'Job', 'Show', 'New', 'Top', 'Best'];
         this.createDataSource(data);
-       
+        theme = this.props.color;
+        console.log(theme)
+    }
+
+    componentWillReceiveProp(nextProps){
+        theme = this.props.color;
     }
 
     render() {
-        console.log('Menu', this.props);
+        
         return <View>
             <ListView
                 dataSource={this.dataSource}

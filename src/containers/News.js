@@ -30,36 +30,6 @@ componentWillMount(){
   this.props.navigation.setParams({ color: this.props.theme.color });
   this.props.dispatch({type: 'FETCH_PENDING'})
 }
-  /*static navigationOptions = {
-      title:  'HN',
-      header: (navigation) => {
-        return (
-          {
-            left: 
-             < TouchableOpacity onPress={() => navigation.navigate('DrawerOpen')} style ={{paddingLeft: 10}}>
-              <Icon name='md-menu' size={30}  color = 'white'/>
-            </TouchableOpacity >
-            ,
-            titleStyle: { paddingLeft: 100},
-            style: { backgroundColor: 'yellow'},
-            right:  (< TouchableOpacity onPress={() => {
-              const resetAction = NavigationActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({ routeName: 'newsList' })
-                ]
-              })
-              navigation.dispatch(resetAction)
-            }} style ={{paddingRight: 10}}>
-  
-              <Text> a</Text>
-  
-            </TouchableOpacity>),
-            tintColor: 'white'
-  
-          })
-      }
-    }*/
 
   render() {
     // console.log('item', this.props);
@@ -72,8 +42,6 @@ componentWillMount(){
       source={{ uri: item.url }}
       startInLoadingState = {true}
       onLoadStart={() =>this.props.dispatch({type: 'FETCH_PENDING'}) }
-      onLoadEnd = {() => {console.log("end")
-        this.props.dispatch({type: 'FETCH_SUCCESS'})}}
     />
    : <HTMLView value={item.text} />
 
@@ -102,7 +70,6 @@ const mapStateToProps = (state) => {
   
   return {
     theme: state.themeReducer,
-    loading: state.loadingReducer
   }
 }
 export default connect(mapStateToProps)(News);

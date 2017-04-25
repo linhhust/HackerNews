@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { NavigationActions } from 'react-navigation'
 
-import { loadData, resetNews } from '../actions'
+import { loadData, resetNews, changeCategory } from '../actions'
 import Item from '../components/Item'
 
 // import { DrawerButton } from '../components/DrawerButton'
@@ -20,25 +20,24 @@ class NewsList extends Component {
   static navigationOptions = {
     title: 'HN',
     header: (navigation) => {
-      if (navigation.state.params != undefined)
-        color = navigation.state.params.color;
-      else color = 'yellow';
-      // console.log('color', navigation)
+      if (navigation.state.params != undefined){
+        color = navigation.state.params.theme.color;
+        size = navigation.state.params.theme.size;
+      }
+      else {
+        color = 'yellow';
+        size = 13;
+      }
       return ({
         left:
         < TouchableOpacity onPress={() => navigation.navigate('tabs')} style={{ paddingLeft: 10 }}>
           <Icon name='md-menu' size={30} color='white' />
         </TouchableOpacity >
         ,
-        titleStyle: { paddingLeft: 100 },
+        titleStyle: { paddingLeft: 100, fontSize: size },
         style: { backgroundColor: color },
-        right: (<View style={{flexDirection:'row'}}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("DrawerOpen")}
-            style={{ paddingRight: 15 }}
-          >
-            <FontAwesome name='share-alt' size={30} color='white' />
-          </TouchableOpacity>< TouchableOpacity onPress={() => {
+        right: (<View style={{ flexDirection: 'row' }}>
+          < TouchableOpacity onPress={() => {
             navigation.dispatch(resetNews(navigation.state.params.category, NewsList.PAGE_SIZE))
           }} style={{ paddingRight: 10 }}>
 
@@ -53,17 +52,18 @@ class NewsList extends Component {
   }
 
   componentWillMount() {
+    console.log('will NewsList')
     this.index = 0;
-    this.props.navigation.setParams({ color: this.props.theme.color });
+    this.props.navigation.setParams({ theme: this.props.theme });
     if (this.props.navigation.state.params == undefined) {
       this.props.navigation.setParams({ category: this.props.news.category });
-      // console.log('navigation', this.props.navigation);
       // this.props.dispatch(NavigationActions.setParams({params:{category: this.props.news.category}, key: 'newsList'}));
       this.props.dispatch(loadData(this.props.news.category, 0, NewsList.PAGE_SIZE));
 
-    } else
+    } else {
+      this.props.dispatch(changeCategory(this.props.navigation.state.params.category))
       this.props.dispatch(loadData(this.props.navigation.state.params.category, 0, 30));
-    //  this.props.navigation.dispatch(loadData(this.props.navigation.state.params.category, 0, NewsList.PAGE_SIZE));
+    }
 
     this.createDataSource(this.props.news);
 
@@ -163,10 +163,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   centering: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonMore: {
+     flex: 1,
     backgroundColor: '#E3E5E6',
     justifyContent: 'center',
     alignItems: 'center',
@@ -191,5 +193,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-// export default connect(mapStateToProps, { loadData })(NewsList);
 export default connect(mapStateToProps)(NewsList);

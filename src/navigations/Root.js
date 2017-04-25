@@ -7,7 +7,6 @@ import NewsListScreen from '../containers/NewsList'
 import Comments from '../containers/Comments'
 import News from '../containers/News'
 
-import Drawer from './Drawer'
 
 export default Root = StackNavigator({
     newsList: {screen: NewsListScreen},
@@ -16,12 +15,4 @@ export default Root = StackNavigator({
     tabs: {screen: Tabs},
     
 });
-// , {
-//     headerMode: 'screen',
-//     navigationOptions: {
-//             header: {
-//                 visible: true
-//             }
-//         }
-// });
 

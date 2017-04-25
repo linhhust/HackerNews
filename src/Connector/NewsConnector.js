@@ -9,8 +9,7 @@ import { addNews } from './actions/NewsAction'
 class Connector extends React.Component {
 
     componentWillMount() {
-        let { action } = this.props;
-        this.loadNews(action.category, action.index, action.number)
+        console.log('will connector')
     }
 
     componentWillReceiveProps(nextProps) {
@@ -18,8 +17,7 @@ class Connector extends React.Component {
         let { action } = nextProps;
         switch (action.type) {
             case 'LOAD_DATA':
-                if (action.index != 0)
-                    this.loadNews(action.category, action.index, action.number)
+                this.loadNews(action.category, action.index, action.number)
                 break;
             case 'RESET_NEWS':
                 // console.log('reset', action)
@@ -68,7 +66,7 @@ class Connector extends React.Component {
                                     })
                                 });
                         }
-                        
+
                     }
                 })
                 .catch(error => {
@@ -79,7 +77,7 @@ class Connector extends React.Component {
                         error: response.error
                     })
                 });
-               
+
         }
     }
 

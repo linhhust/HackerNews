@@ -18,9 +18,9 @@ class Item extends React.Component {
           underlayColor={"#E8E8E8"}
           style={styles.containerLeft}
         >
-          <Text style={styles.title} numberOfLines={2}> {item.title}</Text>
-          <Text style={styles.common} numberOfLines={1}>{item.by}, {convertTime(item.time)}</Text>
-          <Text style={styles.common} numberOfLines={1}> {item.url} </Text>
+          <Text style={[styles.title, {fontSize: this.props.theme.size}]} numberOfLines={2}> {item.title}</Text>
+          <Text style={[styles.common, {fontSize: this.props.theme.size}]} numberOfLines={1}>{item.by}, {convertTime(item.time)}</Text>
+          <Text style={[styles.common, {fontSize: this.props.theme.size}]} numberOfLines={1}> {item.url} </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.containerRight}
@@ -29,10 +29,10 @@ class Item extends React.Component {
             this.props.dispatch(NavigationActions.navigate({routeName: 'comment', params: item}))
             }}>
           <View style={styles.comment}>
-            <Text style={{ color: this.props.theme.color }}>{item.kids ? item.kids.length : 0}</Text>
+            <Text style={{ color: this.props.theme.color, fontSize: this.props.theme.size }}>{item.kids ? item.kids.length : 0}</Text>
           </View>
           <View style={styles.score}>
-            <Text style = {{color: '#D4D6D6'}}>{item.score}</Text>
+            <Text style = {{color: '#D4D6D6', fontSize: this.props.theme.size}}>{item.score}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -44,16 +44,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    height: 90,
+    height: 150,
     borderBottomWidth: 1,
     borderColor: '#F4F6F7',
     paddingLeft: 15,
-    backgroundColor: '#FCFEFF'
+    backgroundColor: '#FCFEFF',
+    
   },
   containerLeft: {
     flex: 7,
     flexDirection: 'column',
-    paddingTop: 8,
+    justifyContent: 'space-around',
+        alignItems: 'flex-start',
+    // paddingTop: 8,
     
   },
   containerRight: {
