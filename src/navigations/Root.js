@@ -1,7 +1,7 @@
 import React from 'react'
 import { StackNavigator } from 'react-navigation'
 
-import Tab from './Tabs'
+import TabsScreen from './Tabs'
 
 import NewsListScreen from '../containers/NewsList'
 import Comments from '../containers/Comments'
@@ -12,7 +12,7 @@ export default Root = StackNavigator({
     newsList: {screen: NewsListScreen},
     comment: {screen: Comments},
     news: {screen: News},
-    tabs: {screen: Tabs},
+    tabs: {screen: TabsScreen},
     
 });
 

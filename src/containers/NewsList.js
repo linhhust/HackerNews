@@ -20,7 +20,7 @@ class NewsList extends Component {
   static navigationOptions = {
     title: 'HN',
     header: (navigation) => {
-      console.log('theme', navigation.state.params);
+      // console.log('theme', navigation.state.params)
       if (navigation.state.params != undefined && navigation.state.params.theme != undefined){
         
         
@@ -34,7 +34,7 @@ class NewsList extends Component {
       }
       return ({
         left:
-        < TouchableOpacity onPress={() => navigation.navigate('tabs')} style={{ paddingLeft: 10 }}>
+        < TouchableOpacity onPress={() => navigation.navigate('tabs', {theme: navigation.state.params.theme})} style={{ paddingLeft: 10 }}>
           <Icon name='md-menu' size={30} color='white' />
         </TouchableOpacity >
         ,
@@ -55,10 +55,16 @@ class NewsList extends Component {
     }
   }
 
+  constructor(props){
+    super(props);
+    // this.props.navigation.setParams({  theme:  this.props.theme});
+  }
+
   componentWillMount() {
-    console.log('will NewsList')
+     this.props.navigation.setParams({  theme:  this.props.theme});
+    // console.log('will NewsList')
     this.index = 0;
-    this.props.navigation.setParams({  theme:  this.props.theme});
+    
     if (this.props.navigation.state.params == undefined) {
       this.props.navigation.setParams({ category: this.props.news.category });
       // this.props.dispatch(NavigationActions.setParams({params:{category: this.props.news.category}, key: 'newsList'}));
@@ -75,12 +81,11 @@ class NewsList extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.createDataSource(nextProps.news);
-    // if (this.props.navigation.state.params != undefined) {
-    //   if (this.props.navigation.state.params.color !== this.props.theme.color)
-    //     this.props.navigation.setParams({ color: this.props.theme.color });
-    // } else
-    //   this.props.navigation.setParams({ color: this.props.theme.color });
-    // console.log('navigation', this.props.navigation);
+    let { params } = nextProps.navigation.state;
+    if (this.props.navigation.state.params != undefined)
+        if (this.props.navigation.state.params.theme.color != nextProps.theme.color) {
+            this.props.navigation.setParams({  theme: nextProps.theme })
+        }
   }
 
   //   shouldComponentUpdate(nextProps, nextState){

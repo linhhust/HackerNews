@@ -3,6 +3,12 @@ const initState = {
     size: 19
 }
 
-export default themeReducer = (state = initState, actions) =>{
-    return state;
+export default themeReducer = (state = initState, actions) => {
+    switch (actions.type) {
+        case 'CHANGE_COLOR':
+            return { ...state, color: actions.color };
+        default:
+            return state;
+    }
+
 }

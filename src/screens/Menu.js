@@ -3,22 +3,22 @@ import { Text, ListView, View, TouchableOpacity } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 
+
+import { changeColor } from '../actions/ThemeAction'
+
 class Menu extends React.Component {
 
     static navigationOptions = {
         // title: 'HN',
         tabBarLabel: 'Menu',
         header: (navigation) => {
-            if (navigation.state.params != undefined)
-                color = navigation.state.params.color;
-            else color = 'blue';
-            // console.log('color', navigation)
-            return ({
-                titleStyle: { paddingLeft: 100 },
-                style: { backgroundColor: color },
-                tintColor: 'white'
-            });
-        },
+            // console.log('navigation menu', navigation)
+        return {
+            titleStyle: { paddingLeft: 100 },
+            style: { backgroundColor: navigation.state.params.theme.color },
+            tintColor: 'white'
+        }
+    }
         
     }
 
@@ -32,19 +32,21 @@ class Menu extends React.Component {
     }
 
     componentWillMount() {
-        this.props.navigation.setParams({ color: this.props.color })
+        // this.props.navigation.setParams({ theme: this.props.theme })
         let data = ['Ask', 'Job', 'Show', 'New', 'Top', 'Best'];
         this.createDataSource(data);
-        theme = this.props.color;
-        console.log(theme)
+
     }
 
-    componentWillReceiveProp(nextProps){
-        theme = this.props.color;
+    componentWillReceiveProps(nextProps) {
+        let { params } = nextProps.navigation.state;
+        if (this.props.navigation.state.params.theme.color != nextProps.theme.color) {
+            this.props.navigation.setParams({  theme: nextProps.theme })
+        }
     }
 
     render() {
-        
+        console.log('render', this.props.navigation.state.params.theme)
         return <View>
             <ListView
                 dataSource={this.dataSource}
@@ -55,7 +57,7 @@ class Menu extends React.Component {
                         <TouchableOpacity
                             onPress={() => {
                                 {/*this.props.dispatch({ type: 'RESET' });*/ }
-                                this.props.dispatch(NavigationActions.navigate({ routeName: 'newsList', params: { category: category } }))
+                                this.props.dispatch(NavigationActions.navigate({ routeName: 'newsList', params: { category: category, theme: this.props.theme } }))
                             }} >
                             <Text> {item} </Text>
                         </TouchableOpacity>)
@@ -64,14 +66,20 @@ class Menu extends React.Component {
                 renderSeparator={(sectionID, rowID) => <View key={rowID} style={{ height: 1, backgroundColor: 'black' }} />}
             />
             <View style={{ flexDirection: 'column' }}>
-                <Text style={{ color: this.props.color }}> YC </Text>
-                <View style={{ height: 2, backgroundColor: this.props.color }} />
+                <Text style={{ color: this.props.theme.color }}> YC </Text>
+                <View style={{ height: 2, backgroundColor: this.props.theme.color }} />
                 <Text > Login </Text>
-                <Text style={{ color: this.props.color }}> READ LATER </Text>
-                <View style={{ height: 2, backgroundColor: this.props.color }} />
+                <Text style={{ color: this.props.theme.color }}> READ LATER </Text>
+                <View style={{ height: 2, backgroundColor: this.props.theme.color }} />
                 <Text > Poket </Text>
                 <Text > Readability </Text>
             </View>
+             <TouchableOpacity onPress={() => {
+                console.log('press')
+                this.props.navigation.dispatch(changeColor('green'))}}>
+            <View 
+                style={{ height: 30, width: 30, backgroundColor: 'green' }} />
+                </TouchableOpacity>
         </View>
 
     }
@@ -79,7 +87,7 @@ class Menu extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        color: state.themeReducer.color
+        theme: state.themeReducer
     }
 }
 

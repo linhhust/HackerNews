@@ -15,9 +15,9 @@ import  {CommentItem}  from '../components/CommentItem'
 class Comments extends React.Component {
   static navigationOptions = {
     header: (navigation) => {
-      let color = (navigation.state.params.color != undefined)? navigation.state.params.color: 'yellow'
+      
       return ({
-        style: { backgroundColor: color },
+        style: { backgroundColor: navigation.state.params.theme.color },
         right:
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity
@@ -38,10 +38,15 @@ class Comments extends React.Component {
     }
   }
 
+  constructor(props){
+    super(props);
+    // this.props.navigation.setParams({ color: this.props.theme.color });
+  }
+
   componentWillMount() {
     // console.log('comment will mount', this.props);
-    this.props.navigation.setParams({ color: this.props.theme.color });
-    const kids = this.props.navigation.state.params.kids;
+    
+    const kids = this.props.navigation.state.params.item.kids;
     this.props.dispatch(loadComments([], kids));
     // console.log('comment will mount', this.props);
     this.createDataSource(this.props);

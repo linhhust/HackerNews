@@ -1,24 +1,25 @@
 import { TabNavigator, StackNavigator } from 'react-navigation'
+import React from 'react'
+import { connect } from 'react-redux'
+
 
 import Setting from '../screens/Setting'
 import Menu from '../screens/Menu'
 
-export default Tabs = TabNavigator({
+const Tabs = TabNavigator({
     menu: { screen: Menu },
     setting: { screen: Setting },
 });
-// }, {
-//     tabBarOptions: {
-//             activeTintColor: 'blue',
-//             labelStyle: {
-//                 fontSize: 18,
-//             },
-//             style: {
-//                 backgroundColor: Menu.theme ? Menu.theme: 'yellow',
-//             },
-//         }
-// });
+
 
 Tabs.navigationOptions = {
-    title: "HN"
+    title: "HN",
+    
 }
+
+const mapStateToProps = (state) => {
+    return {
+        theme: state.themeReducer
+    }
+}
+export default connect(mapStateToProps)(Tabs)

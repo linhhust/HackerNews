@@ -11,7 +11,7 @@ class News extends React.Component {
     header: (navigation) => {
       
       return {
-        style: { backgroundColor: navigation.state.params.color },
+        style: { backgroundColor: navigation.state.params.theme.color },
         right:
         <TouchableOpacity
           onPress={() => navigation.dispatch(NavigationActions.navigate({ routeName: 'comment', params: navigation.state.params }))}
@@ -25,15 +25,13 @@ class News extends React.Component {
     }
   }
 
-
 componentWillMount(){
-  this.props.navigation.setParams({ color: this.props.theme.color });
-  this.props.dispatch({type: 'FETCH_PENDING'})
+  // this.props.navigation.setParams({ color: this.props.theme.color });  
 }
-
   render() {
     // console.log('item', this.props);
-    const item = this.props.navigation.state.params;
+    const {item} = this.props.navigation.state.params;
+    console.log('item', item)
     let url =  (item.type == 'story') ? item.url: item.text;
     return (
        (item.url != '')?

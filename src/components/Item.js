@@ -14,7 +14,7 @@ class Item extends React.Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={() =>this.props.dispatch(NavigationActions.navigate({routeName: 'news', params: item}))}
+          onPress={() =>this.props.dispatch(NavigationActions.navigate({routeName: 'news', params: {item, theme: this.props.theme}}))}
           underlayColor={"#E8E8E8"}
           style={styles.containerLeft}
         >
@@ -26,7 +26,7 @@ class Item extends React.Component {
           style={styles.containerRight}
           onPress={() => {
             this.props.dispatch({type: 'RESET_COMMENT'});
-            this.props.dispatch(NavigationActions.navigate({routeName: 'comment', params: item}))
+            this.props.dispatch(NavigationActions.navigate({routeName: 'comment', params: {item, theme: this.props.theme}}))
             }}>
           <View style={styles.comment}>
             <Text style={{ color: this.props.theme.color, fontSize: this.props.theme.size }}>{item.kids ? item.kids.length : 0}</Text>
